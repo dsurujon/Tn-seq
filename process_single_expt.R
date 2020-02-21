@@ -68,13 +68,14 @@ process_single_expt <- function(inputfilename, essentialsfile, N, outdirname){
   
   #adjust p value for false discovery
   tnfile_ttest$padj <- p.adjust(tnfile_ttest$pvalue, "BH")
-  # mark discoveries based on adjusted p value
-  tnfile_ttest$Discovery <- ""
-  tnfile_ttest$Discovery[tnfile_ttest$pvalue<=0.002]<-"***"
-  tnfile_ttest$Discovery[tnfile_ttest$pvalue<=0.0002]<-"****"
+  # mark discoveries based on non-adjusted p value
+  tnfile_ttest$Sig <- ""
+
+  tnfile_ttest$Sig[tnfile_ttest$pvalue<=0.002]<-"***"
+  tnfile_ttest$Sig[tnfile_ttest$pvalue<=0.0002]<-"****"
   
-  tnfile_ttest$Sig <- FALSE
-  tnfile_ttest$Sig[tnfile_ttest$padj<=0.05] <- TRUE
+  tnfile_ttest$Discovery <- FALSE
+  tnfile_ttest$Discovery[tnfile_ttest$padj<=0.05] <- TRUE
   
   #write to file
   discoveriesfile <- file.path(outdirname, paste0(filestub, '_discovery.csv'))
